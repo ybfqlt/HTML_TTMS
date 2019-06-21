@@ -1,0 +1,298 @@
+<!doctype html>
+<html class="x-admin-sm">
+<head>
+    <meta charset="UTF-8">
+    <title>CoCo--销售统计</title>
+    <link rel="stylesheet" href="../css/font.css">
+    <link rel="stylesheet" href="../css/xadmin.css">
+    <script type="text/javascript" src="../js/echarts.js"></script>
+    <script src="../js/jquery.min.js" type="text/javascript"></script>
+        <script type="text/javascript" src="../js/level.js"></script>
+</head>
+<body style="height: 100%">
+<!-- 为 ECharts 准备一个具备大小（宽高）的 DOM -->
+<div style="float: left;width: 50%; height:50%; overflow: auto;">
+    <div id="main"
+         style="width: 100%;max-width: 640px;min-width: 200px; height:100%;max-height: 500px;min-height: 200px; margin: auto"></div>
+</div>
+<div style="float: right;width: 50%;height:50%;overflow: auto;">
+    <div id="main1"
+         style="width: 100%;max-width: 640px;min-width: 200px; height:100%;max-height: 500px;min-height: 200px; margin: auto"></div>
+</div>
+<hr>
+<div style="float: left;width: 50%; height:50%; overflow: auto;">
+    <div id="main2"
+         style="width: 100%;max-width: 640px;min-width: 200px; height:100%;max-height: 500px;min-height: 200px; margin: auto"></div>
+</div>
+<div style="float: right;width: 50%;height:50%;overflow: auto;">
+    <div id="main3"
+         style="width: 100%;max-width: 640px;min-width: 200px; height:100%;max-height: 500px;min-height: 200px; margin: auto"></div>
+</div>
+<script src="https://cdn.bootcss.com/echarts/4.2.1-rc1/echarts.min.js"></script>
+<script src="https://cdn.bootcss.com/echarts/4.2.1-rc1/extension/bmap.min.js"></script>
+
+<script type="text/javascript">
+    var data1 = [];
+    var data2 = [];
+    var data_name = [];
+    var data3_value = [];
+    var data4_value = [];
+    //加载首页数据
+    $.ajax({
+        url: "http://120.78.64.17:8080/TTMS_bs1.0/in/tickethome",
+        type: 'get',
+        dataType: 'json',
+        async: false,
+        success: function (datas) {
+            for (var i = 0; i < datas.movieCount; i++) {
+                data1.push({value: datas.result[i].ticketValue, name: datas.result[i].name});
+                data2.push({value: datas.result[i].saleValue, name: datas.result[i].name});
+                data_name.push(datas.result[i].name);
+                data3_value.push(datas.result[i].ticketValue)
+                data4_value.push(datas.result[i].saleValue)
+            }
+        }
+    });
+
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('main'));
+    // 指定图表的配置项和数据
+    option = {
+        backgroundColor: '#EEE',
+
+        title: {
+            text: '票数分布',
+            left: 'center',
+            top: 20,
+            textStyle: {
+                color: '#000'
+            }
+        },
+
+        tooltip: {
+            trigger: 'item',
+            formatter: "{a} <br/>{b} : {c} ({d}%)"
+        },
+
+        visualMap: {
+            show: false,
+            min: 80,
+            max: 600,
+            inRange: {
+                colorLightness: [0, 1]
+            }
+        },
+        series: [
+            {
+                name: '票数分布',
+                type: 'pie',
+                radius: '55%',
+                center: ['50%', '50%'],
+                data: data1.sort(function (a, b) {
+                    return a.value - b.value
+                }),
+                roseType: 'angle',
+                label: {
+                    normal: {
+                        textStyle: {
+                            color: 'rgba(0, 0, 0, 0.9)'
+                        }
+                    }
+                },
+                labelLine: {
+                    normal: {
+                        lineStyle: {
+                            color: 'rgba(0, 0, 0, 0.9)'
+                        },
+                        smooth: 0.2,
+                        length: 10,
+                        length2: 20
+                    }
+                },
+                itemStyle: {
+                    normal: {
+                        color: '#FBC02D',
+                        shadowBlur: 200,
+                        shadowColor: 'rgba(251, 192, 45, 0.3)'
+                    }
+                }
+            }
+        ]
+    };
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.setOption(option);
+
+
+    var myChart1 = echarts.init(document.getElementById('main1'));
+    // 指定图表的配置项和数据
+    option = {
+        backgroundColor: '#EEE',
+
+        title: {
+            text: '票房分布',
+            left: 'center',
+            top: 20,
+            textStyle: {
+                color: '#000'
+            }
+        },
+
+        tooltip: {
+            trigger: 'item',
+            formatter: "{a} <br/>{b} : {c} ({d}%)"
+        },
+
+        visualMap: {
+            show: false,
+            min: 80,
+            max: 600,
+            inRange: {
+                colorLightness: [0, 1]
+            }
+        },
+        series: [
+            {
+                name: '票数分布',
+                type: 'pie',
+                radius: '55%',
+                center: ['50%', '50%'],
+                data: data2.sort(function (a, b) {
+                    return a.value - b.value
+                }),
+                roseType: 'angle',
+                label: {
+                    normal: {
+                        textStyle: {
+                            color: 'rgba(0, 0, 0, 0.9)'
+                        }
+                    }
+                },
+                labelLine: {
+                    normal: {
+                        lineStyle: {
+                            color: 'rgba(0, 0, 0, 0.9)'
+                        },
+                        smooth: 0.2,
+                        length: 10,
+                        length2: 20
+                    }
+                },
+                itemStyle: {
+                    normal: {
+                        color: '#FBC02D',
+                        shadowBlur: 200,
+                        shadowColor: 'rgba(251, 192, 45, 0.5)'
+                    }
+                }
+            }
+        ]
+    };
+    // 使用刚指定的配置项和数据显示图表。
+
+    myChart1.setOption(option);
+
+
+    var dom = document.getElementById("main2");
+    var myChart = echarts.init(dom);
+    var app = {};
+    option = null;
+    app.title = '坐标轴刻度与标签对齐';
+
+    option = {
+        color: ['#FBC02D'],
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+                type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+            }
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        xAxis: [
+            {
+                type: 'category',
+                data: data_name,
+                axisTick: {
+                    alignWithLabel: true
+                }
+            }
+        ],
+        yAxis: [
+            {
+                type: 'value'
+            }
+        ],
+        series: [
+            {
+                name: '票数',
+                type: 'bar',
+                barWidth: '60%',
+                data: data3_value
+            }
+        ]
+    };
+    ;
+    if (option && typeof option === "object") {
+        myChart.setOption(option, true);
+    }
+
+
+    var dom3 = document.getElementById("main3");
+    var myChart = echarts.init(dom3);
+    //    var app = {};
+    option = null;
+    //    app.title = '坐标轴刻度与标签对齐';
+    var dataName = [];
+    dataName.push('a')
+    var dataValue = [];
+    dataValue.push(3)
+    option = {
+        color: ['#FBC02D'],
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+                type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+            }
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        xAxis: [
+            {
+                type: 'category',
+                data: data_name,
+                axisTick: {
+                    alignWithLabel: true
+                }
+            }
+        ],
+        yAxis: [
+            {
+                type: 'value'
+            }
+        ],
+        series: [
+            {
+                name: '票房',
+                type: 'bar',
+                barWidth: '60%',
+                data: data4_value
+            }
+        ]
+    };
+    ;
+    if (option && typeof option === "object") {
+        myChart.setOption(option, true);
+    }
+
+</script>
+
+</body>
+</html>

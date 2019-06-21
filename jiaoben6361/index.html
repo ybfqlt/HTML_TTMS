@@ -1,0 +1,44 @@
+﻿<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>jQuery响应式卡片轮播切换代码 - 站长素材</title>
+
+<link rel="stylesheet" type="text/css" href="css/style.css" />
+
+</head>
+<body>
+
+<div id="banner">
+	<div id="carousel">
+	</div>
+</div>
+
+<script src="js/jquery-1.11.0.js" type="text/javascript" charset="utf-8"></script>
+<script src="js/slider.js" type="text/javascript" charset="utf-8"></script>
+<script>
+	$(function() {
+		$('#carousel').carousel({
+			curDisplay: 0, //默认索引
+			autoPlay: true, //是否自动播放
+			interval: 2250 //间隔时间
+		});
+	});
+</script>
+	<script>
+	$.ajax({
+        url: "http://120.78.64.17:8080/TTMS_bs1.0/in/showmovie",
+        type: 'get',
+		async:false,
+        dataType: 'json',
+        success: function (datas) {
+            var tbhtml = "";
+            for (var i = 0; i < datas.length; i++) {
+                tbhtml += "<img src='" + datas[i].moviePoster + "' data-url='#'>";
+            }
+            $('#carousel').html(tbhtml);
+        }
+    });
+	</script>
+</body>
+</html>

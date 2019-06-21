@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html class="x-admin-sm">
+    <head>
+        <meta charset="UTF-8">
+        <title>CoCo--用户管理</title>
+        <link rel="stylesheet" href="../css/font.css">
+        <link rel="stylesheet" href="../css/xadmin.css">
+        <script src="../lib/layui/layui.js" charset="utf-8"></script>
+        <script type="text/javascript" src="../js/xadmin.js"></script>
+        <script type="text/javascript" src="../js/jquery.min.js"></script>
+        <script type="text/javascript" src="../js/level.js"></script>
+    </head>
+    <body>
+        <div class="layui-fluid">
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-md12">
+                    <div class="layui-card">
+                        <div class="layui-card-body ">
+                            <button class="layui-btn" onClick="xadmin.open('搜索用户','./admin-sreach.html',1280,480)"><i class="layui-icon">&#xe615;</i>搜索</button>
+                            <button class="layui-btn" onclick="xadmin.open('添加用户','./admin-add.html',550,295)"><i class="layui-icon"></i>添加</button>
+                        </div>
+                        <div class="layui-card-body ">
+                            <table class="layui-table layui-form">
+                              <thead>
+                                <tr>
+                                  <th>ID</th>
+                                  <th>用户名</th>
+                                  <th>密码</th>
+                                  <th>角色</th>
+                                  <th>注册时间</th>
+                                  <th>操作</th>
+								  </tr>
+                              </thead>
+                              <tbody>
+                              </tbody>
+                            </table>
+                        </div>
+                        <div class="layui-card-body ">
+                            <div class="page">
+                                <div>
+                                  <a class="prev" href="">&lt;&lt;</a>
+                                  <span class="current">1</span>
+                                  <a class="next" href="">&gt;&gt;</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> 
+    </body>
+    <script>
+
+		$.ajax({
+			url:"http://120.78.64.17:8080/TTMS_bs1.0/in/manager/selectjuser",
+			type:"get",
+			dataType:"json",
+			success:function(data){
+				var html = "";
+				for(var i = 0; i < data.count; i++){
+					html+="<tr><td>" + data.data[i].userId + "</td><td>" + data.data[i].userName + "</td><td>" + data.data[i].userPassword + "</td><td>经理</td><td>"  + data.data[i].userRegistertime + "</td><td class='td-manage'><a title='编辑' onclick='xadmin.open(&quot编辑&quot,&quot./admin-edit.html?name=" + data.data[i].userName + "&quot,640,240)' href='javascript:;'><i class='layui-icon'>&#xe642;</i></a><a title='删除' onclick='admin_del(this," + data.data[i].userId + ")' href='javascript:;'><i class='layui-icon'>&#xe640;</i></a></td></tr>"
+				}
+				$('tbody:eq(0)').html(html);
+			},
+			error: function(){
+				alert("error");
+			}
+		});
+      /*用户-删除*/
+      function admin_del(obj,id){
+          layer.confirm('确认要删除吗？',function(index){
+              //发异步删除数据
+			  var json = {
+				  "userId":id
+			  };
+			  $.ajax({
+				  url:"",
+				  type:"POST",
+				  data:JSON.stringify(json),
+				  dataType:"json",
+				  async:false,
+				  contentType: 'application/json',
+					xhrFields:{
+						withCredentials: true
+					},
+				  success: function(data){
+					  if(data.state == true){
+						  $(obj).parents("tr").remove();
+              			layer.msg('已删除!',{icon:1,time:1000});
+					  }else{
+						  layer.msg('操作出错!',{icon:5,time:1000});
+					  }
+				  },
+				  error: function(){
+					  layer.msg('操作出错!',{icon:5,time:1000});
+				  }
+				  
+			  });
+              
+          });
+      }
+    </script>
+</html>

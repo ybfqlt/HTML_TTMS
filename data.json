@@ -1,0 +1,45 @@
+{
+	"movieCount" : 8,
+	"result":[
+		{
+			"name":"复仇者联盟",
+			"ticketValue":100,
+			"saleValue":3300
+		},
+		{
+			"name":"2",
+			"ticketValue":200,
+			"saleValue":3300
+		},
+		{
+			"name":"3",
+			"ticketValue":300,
+			"saleValue":3300
+		},
+		{
+			"name":"4",
+			"ticketValue":400,
+			"saleValue":3300
+		},
+		{
+			"name":"5",
+			"ticketValue":500,
+			"saleValue":3300
+		},
+		{
+			"name":"6",
+			"ticketValue":600,
+			"saleValue":3300
+		},
+		{
+			"name":"7",
+			"ticketValue":560,
+			"saleValue":3300
+		},
+		{
+			"name":"8",
+			"ticketValue":440,
+			"saleValue":3300
+		}
+	]
+}

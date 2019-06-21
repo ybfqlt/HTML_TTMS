@@ -1,0 +1,32 @@
+{
+	"count":3,
+	"result":[
+		{
+			"id":1,
+			"title":"1",
+			"hallId":1,
+			"hallName":"1",
+			"date":"2018-10-10",
+			"startTime":"19:00",
+			"endTime":"21:01"
+		},
+		{
+			"id":1,
+			"title":"1",
+			"hallId":1,
+			"hallName":"1",
+			"date":"2018-10-10",
+			"startTime":"19:00",
+			"endTime":"21:01"
+		},
+		{
+			"id":1,
+			"title":"1",
+			"hallId":1,
+			"hallName":"1",
+			"date":"2018-10-10",
+			"startTime":"19:00",
+			"endTime":"21:01"
+		}
+	]
+}

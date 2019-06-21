@@ -1,0 +1,33 @@
+body.index {
+	background: rgba(0, 0, 0, 0) !important;
+}
+.container {
+	background: linear-gradient(to left, #ffa94e, #ff5350) !important;
+}
+.container .layui-nav-bar {
+	background: #FBC02D !important;
+}
+.container .logo a {
+	background: rgba(0, 0, 0, 0) !important;
+}
+.container .logo a {
+	color: rgb(255, 255, 255) !important;
+}
+.left-nav {
+	background: rgb(238, 238, 238) !important;
+}
+.left-nav a {
+	color: rgba(0, 0, 0, 1) !important;
+}
+.left-nav a:hover, .left-nav a.active {
+	background: linear-gradient(to left, #ffa94e, #ff5350) !important;
+}
+.left-nav a:hover, .left-nav a.active {
+	color: rgb(255, 255, 255) !important;
+}
+.left-nav a:hover, .left-nav a.active {
+	border-color: #b61827 !important;
+}
+body {
+	background: rgb(241, 241, 241) !important;
+}

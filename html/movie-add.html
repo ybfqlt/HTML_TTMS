@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html class="x-admin-sm">
+    
+    <head>
+        <meta charset="UTF-8">
+        <title>CoCo--增加影片</title>
+        <link rel="stylesheet" href="../css/font.css">
+        <link rel="stylesheet" href="../css/xadmin.css">
+        <script type="text/javascript" src="../lib/layui/layui.js" charset="utf-8"></script>
+        <script type="text/javascript" src="../js/xadmin.js"></script>
+		<script type="text/javascript" src="../js/jquery.min.js"></script>
+        <script type="text/javascript" src="../js/level.js"></script>
+    </head>
+    <body>
+        <div class="layui-fluid">
+            <div class="layui-row">
+                <form class="layui-form">
+                    <div class="layui-form-item">
+                        <label for="title" class="layui-form-label">
+                            <span class="x-red">*</span>名称</label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="title" name="title" required="" lay-verify="title" autocomplete="off" class="layui-input"></div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label for="poster" class="layui-form-label">
+                            <span class="x-red">*</span>海报</label>
+                        <div class="layui-input-inline">
+                            <input type="url" id="poster" name="poster" required="" lay-verify="poster" autocomplete="off" class="layui-input"></div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label for="alsoKnowAs" class="layui-form-label">
+                            <span class="x-red">*</span>别名</label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="alsoKnowAs" name="alsoKnowAs" required="" lay-verify="alsoKnowAs" autocomplete="off" class="layui-input"></div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label for="plotSimple" class="layui-form-label">
+                            <span class="x-red">*</span>简介</label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="plotSimple" name="plotSimple" required="" lay-verify="plotSimple" autocomplete="off" class="layui-input"></div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label for="writers" class="layui-form-label">
+                            <span class="x-red">*</span>创作者</label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="writers" name="writers" required="" lay-verify="writers" autocomplete="off" class="layui-input"></div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label for="directors" class="layui-form-label">
+                            <span class="x-red">*</span>导演</label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="directors" name="directors" required="" lay-verify="directors" autocomplete="off" class="layui-input"></div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label for="actors" class="layui-form-label">
+                            <span class="x-red">*</span>主演</label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="actors" name="actors" required="" lay-verify="actors" autocomplete="off" class="layui-input"></div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label for="country" class="layui-form-label">
+                            <span class="x-red">*</span>地区</label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="country" name="country" required="" lay-verify="country" autocomplete="off" class="layui-input"></div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label for="runTime" class="layui-form-label">
+                            <span class="x-red">*</span>时长</label>
+                        <div class="layui-input-inline">
+                            <input type="number" id="runTime" name="runTime" required="" lay-verify="runTime" autocomplete="off" class="layui-input" oninput="value=value.replace(/[^\d]/g,'')"></div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label for="genres" class="layui-form-label">
+                            <span class="x-red">*</span>类型</label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="genres" name="genres" required="" lay-verify="genres" autocomplete="off" class="layui-input"></div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label for="rating" class="layui-form-label">
+                            <span class="x-red">*</span>评分</label>
+                        <div class="layui-input-inline">
+                            <input type="range" min="0" max="10" step="0.1" id="rating" name="rating" required="" autocomplete="off" class="range" oninput="rangeChange()">
+							<input id="show" type="text" class="show" disabled="disabled" value="5" lay-verify="rating"></div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label for="add" class="layui-form-label"></label>
+                        <button class="layui-btn" lay-filter="add" lay-submit="">增加</button></div>
+                </form>
+            </div>
+        </div>
+        <script>layui.use(['form', 'layer','jquery'],
+            function() {
+                $ = layui.jquery;
+                var form = layui.form,
+                layer = layui.layer;
+
+                //自定义验证规则
+                form.verify({
+					title: function(value){
+						if (value.length < 1) {
+                            return '名称不能为空';
+                        }
+					},
+					alsoKnowAs: function(value){
+						if (value.length < 1) {
+                            return '别名不能为空';
+                        }
+					},
+					plotSimple: function(value){
+						if (value.length < 1) {
+                            return '简介不能为空';
+                        }
+					},
+					writers: function(value){
+						if (value.length < 1) {
+                            return '创作者不能为空';
+                        }
+					},
+					directors: function(value){
+						if (value.length < 1) {
+                            return '导演不能为空';
+                        }
+					},
+					actors: function(value){
+						if (value.length < 1) {
+                            return '主演不能为空';
+                        }
+					},
+					country: function(value){
+						if (value.length < 1) {
+                            return '地区不能为空';
+                        }
+					},
+					runTime: function(value){
+						if (value.length < 1) {
+                            return '时长不能为空';
+                        }
+					},
+					genres: function(value){
+						if (value.length < 1) {
+                            return '类型不能为空';
+                        }
+					}
+                });
+                //监听提交
+                form.on('submit(add)',
+                function(data) {
+					var datas = data.field;
+//					console.log(datas);
+                    layer.alert("确认增加", {
+                        icon: 3
+                    },
+                    function() {
+						var json = {
+							"movieTitle":datas.title,
+							"moviePoster":datas.poster,
+							"movieAlsoKnownAs":datas.alsoKnowAs,
+							"moviePlotSimple":datas.plotSimple,
+							"movieWriters":datas.writers,
+							"movieDirectors":datas.directors,
+							"movieActors":datas.actors,
+							"movieCountry":datas.country,
+							"movieRuntime":parseInt(datas.runTime),
+							"movieGenres":datas.genres,
+							"movieRating":parseFloat(datas.rating)
+						};
+						$.ajax({
+							url:"http://120.78.64.17:8080/TTMS_bs1.0/in/jingli/addmovie",
+							type:"POST",
+							data: JSON.stringify(json),
+							dataType:"json",
+							async:false,
+							contentType: 'application/json',
+							xhrFields:{
+								withCredentials: true
+							},
+							success: function(data){
+								if(data.addState == true){
+									layer.alert(data.msg,{
+										icon:6
+									})
+								}else{
+									layer.alert(data.msg,{
+										icon:5
+									})
+								}
+							},
+							error: function(){
+								layer.alert("请求服务器出错，请稍后再试",{
+									icon:5
+								})
+							}
+							
+						});
+                        //关闭当前frame
+                        xadmin.close();
+
+                        // 可以对父窗口进行刷新 
+                        xadmin.father_reload();
+                    });
+                    return false;
+                });
+
+            });</script>
+    </body>
+	
+	<script>
+		function rangeChange(){ 
+      var num=document.getElementById("rating"); 
+      var location=document.getElementById("show"); 
+      location.value=num.value; 
+  		} 
+	</script>
+
+</html>

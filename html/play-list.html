@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html class="x-admin-sm">
+<head>
+<meta charset="UTF-8">
+<title>CoCo--排片管理</title>
+<link rel="stylesheet" href="../css/font.css">
+<link rel="stylesheet" href="../css/xadmin.css">
+<script src="../lib/layui/layui.js" charset="utf-8"></script>
+<script type="text/javascript" src="../js/xadmin.js"></script>
+	<script type="text/javascript" src="../js/jquery.min.js"></script>
+        <script type="text/javascript" src="../js/level.js"></script>
+</head>
+<body>
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                            
+                    <div class="layui-card-header">
+                        <button class="layui-btn" onclick="xadmin.open('添加放映计划','./play-add.html',400,355)"><i class="layui-icon"></i>添加</button>
+						<select style="width: 100px" id="movie" onChange="change()">
+								<option value="defulat">电影</option>
+						</select>
+						<select style="width: 100px" id="hall" onChange="change()">
+								<option value="defulat">影厅</option>
+						</select>
+                    </div>
+                <div class="layui-card-body ">
+                    <table class="layui-table layui-form">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>电影名称</th>
+                                <th>影厅</th>
+                                <th>价格</th>
+                                <th>开始时间</th>
+                                <th>结束时间</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+	$.ajax({
+					url:"http://120.78.64.17:8080/TTMS_bs1.0/in/jingli/selectmovie",
+					type:"get",
+					dataType:"json",
+					async:true,
+					contentType: 'application/json',
+					xhrFields:{
+						withCredentials: true
+					},
+					success:function(data){
+						if(data.state == true){
+							var html = "<option value='0'>电影</option>";
+							for(var i = 0; i < data.count; i++){
+								html+="<option value='" + data.data[i].movieId + "'>" + data.data[i].movieTitle + "</option>";
+							}
+							$("#movie").html(html);
+						}
+
+					},
+					error: function(){
+						console.log("error");
+					}
+				});
+			
+			$.ajax({
+					url:"http://120.78.64.17:8080/TTMS_bs1.0/in/jingli/showhall",
+					type:"get",
+					dataType:"json",
+					async:true,
+					contentType: 'application/json',
+					xhrFields:{
+						withCredentials: true
+					},
+					success:function(data){
+						if(data.count != 0){
+							var html = "<option value='0'>影厅</option>";
+							for(var i = 0; i < data.count; i++){
+								html+="<option value='" + data.data[i].hallId + "'>" + data.data[i].hallName + "</option>";
+							}
+							$("#hall").html(html);
+						}
+
+					},
+					error: function(){
+						console.log("error");
+					}
+				});
+	
+	$.ajax({
+		url:"http://120.78.64.17:8080/TTMS_bs1.0/in/jingli/selectall",
+		type:"get",
+		dataType:"json",
+		async:true,
+		contentType: 'application/json',
+		xhrFields:{
+			withCredentials: true
+		},
+		success: function(data){
+			if(data.count > 0){
+				var html = "";
+				for(var i = 0; i < data.count; i++){
+					html+="<tr><td>" + data.data[i].scheduleId + "</td><td>" + data.data[i].movieTitle + "</td><td>" + data.data[i].hallId + "号" + data.data[i].hallName + "厅</td><td>" + data.data[i].scheduleTicketPrice + "</td><td>" + toDate(data.data[i].scheduleStartTime) + "</td><td>" + toDate(data.data[i].scheduleEndTime) + "</td><td class='td-manage'><a title='删除' onclick='play_del(this," + data.data[i].scheduleId + ")' href='javascript:;'><i class='layui-icon'>&#xe640;</i></a></td></tr>";
+				}
+				$('tbody:eq(0)').html(html);
+			}else{
+				var html = "<tr><td>暂无</td><td>暂无</td><td>暂无</td><td>暂无</td><td>暂无</td><td>暂无</td><td>暂无</td></tr>"
+				$('tbody:eq(0)').html(html);
+			}
+		}
+	});
+	
+	function toDate(number){
+		var date = new Date(number);
+		var Y = date.getFullYear() + '-';
+		var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+		var D = date.getDate() < 10 ? '0' + date.getDate() : date.getDate();
+		var h = date.getHours() + ':';
+		if(h.length === 2){
+			h ="0" + h;
+		}	
+		var m = date.getMinutes();
+		if(m === 0){
+			m ="00";
+		}
+		if(m <10){
+			m = "0" + m;
+		}
+		return (Y + M + D + " " + h + m);
+	}
+
+	function change(value){
+		var movie = document.getElementById("movie").options[document.getElementById("movie").selectedIndex].value;
+		var hall = document.getElementById("hall").options[document.getElementById("hall").selectedIndex].value;
+		var json = {
+			"movieId": parseInt(movie),
+			"hallId": parseInt(hall)
+		}
+		$.ajax({
+			url:"http://120.78.64.17:8080/TTMS_bs1.0/in/jingli/selectsao",
+			type:"POST",
+			data:JSON.stringify(json),
+			dataType:"json",
+			async:true,
+			contentType: 'application/json',
+			xhrFields:{
+				withCredentials: true
+			},
+			success: function(data){
+				if(data.data.length > 0){
+					var html = "";
+					for(var i = 0; i < data.data.length; i++){
+						html+="<tr><td>" + data.data[i].scheduleId + "</td><td>" + data.data[i].movieTitle + "</td><td>" + data.data[i].hallId + "号" + data.data[i].hallName + "厅</td><td>" + data.data[i].scheduleTicketPrice + "</td><td>" + toDate(data.data[i].scheduleStartTime) + "</td><td>" + toDate(data.data[i].scheduleEndTime) + "</td><td class='td-manage'><a title='删除' onclick='play_del(this," + data.data[i].scheduleId + ")' href='javascript:;'><i class='layui-icon'>&#xe640;</i></a></td></tr>";
+					}
+					$('tbody:eq(0)').html(html);
+				}else{
+					var html = "<tr><td>暂无</td><td>暂无</td><td>暂无</td><td>暂无</td><td>暂无</td><td>暂无</td><td>暂无</td></tr>"
+					$('tbody:eq(0)').html(html);
+				}
+			}
+		})
+	}
+	
+      /*放映计划-删除*/
+      function play_del(obj,id){
+		  console.log(id);
+          layer.confirm('确认要删除吗？',function(index){
+			 var json = {
+				"scheduleId":id 
+			 };
+              //发异步删除数据
+			  $.ajax({
+				 url:"http://120.78.64.17:8080/TTMS_bs1.0/in/jingli/deleteschedule",
+				  type:"POST",
+				  data:JSON.stringify(json),
+				  dataType:"json",
+				  async:true,
+					contentType: 'application/json',
+					xhrFields:{
+						withCredentials: true
+					},
+				  success: function(data){
+					  if(data.deleteState == true){
+						  $(obj).parents("tr").remove();
+              				layer.msg(data.msg,{icon:1,time:1000});
+					  }else{
+						  layer.msg(data.msg,{icon:2,time:1000});
+					  }
+				  },
+				  error: function(){
+					  layer.msg('请求服务器出错',{icon:2,time:1000});
+				  }
+			  });
+              
+          });
+      }
+    </script>
+</html>

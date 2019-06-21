@@ -1,0 +1,29 @@
+{
+	"count":3,
+	"result":[
+		{
+			"id":1,
+			"name":"1",
+			"row":1,
+			"line":1,
+			"seat":1,
+			"seatAll":1
+		},
+		{
+			"id":2,
+			"name":"2",
+			"row":2,
+			"line":2,
+			"seat":3,
+			"seatAll":4
+		},
+		{
+			"id":3,
+			"name":"3",
+			"row":3,
+			"line":3,
+			"seat":5,
+			"seatAll":9
+		}
+	]
+}

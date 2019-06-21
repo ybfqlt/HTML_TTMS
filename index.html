@@ -1,0 +1,68 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>CoCo-首页</title>
+        <!--CSS-->
+        <link rel="stylesheet" href="./css/common.css"/>
+        <link rel="stylesheet" href="./css/home-index.css"/>
+        <link rel="stylesheet" href="./css/movie-list.css"/>
+        <link rel="stylesheet" href="./css/buttons.css"/>
+		<link rel="stylesheet" type="text/css" href="./css/style.css" />
+        <!--JS-->
+        <script type="text/javascript" src="./js/jquery.min.js"></script>
+    </head>
+    <body>
+        <div id="mainHeader">
+                <div id="logo"> CoCo </div>
+                <div id="headerLinks"><a href="./html/Login.html" title="登录">登录</a></div>
+        </div>
+        <div class="header-placeholder"></div>
+		
+		<div id="banner">
+			<div id="carousel">
+			</div>
+		</div>
+		
+        <div class="movies-list">
+            <dl class="movie-list">
+            </dl>
+        </div>
+		<footer data-am-widget="footer" class="am-footer am-footer-default" data-am-footer="{  }">
+			<div class="am-footer-miscs ">
+				<p>由CoCo团队提供技术支持</p>
+				<p>CopyRight©2019 CoCO Inc.</p>
+			</div>
+		</footer>
+        <!--JS-->
+        <script type="text/javascript" src="./js/canvas-nest.js"></script>
+        <script type="text/javascript" src="./js/mouseClick.js"></script>
+        <script src="./js/index.js"></script>
+    </body>
+	
+<script src="./js/slider.js" type="text/javascript" charset="utf-8"></script>
+	<script>
+	$(function() {
+		$('#carousel').carousel({
+			curDisplay: 0, //默认索引
+			autoPlay: true, //是否自动播放
+			interval: 2250 //间隔时间
+		});
+	});
+</script>
+	<script>
+	$.ajax({
+        url: "http://120.78.64.17:8080/TTMS_bs1.0/in/showmovie",
+        type: 'get',
+		async:false,
+        dataType: 'json',
+        success: function (datas) {
+            var tbhtml = "";
+            for (var i = 0; i < datas.length; i++) {
+                tbhtml += "<img src='" + datas[i].moviePoster + "' data-url='#'>";
+            }
+            $('#carousel').html(tbhtml);
+        }
+    });
+	</script>
+</html>

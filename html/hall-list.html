@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html class="x-admin-sm">
+<head>
+<meta charset="UTF-8">
+<title>CoCo--影厅管理</title>
+<link rel="stylesheet" href="../css/font.css">
+<link rel="stylesheet" href="../css/xadmin.css">
+<script src="../lib/layui/layui.js" charset="utf-8"></script>
+<script type="text/javascript" src="../js/xadmin.js"></script>
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+        <script type="text/javascript" src="../js/level.js"></script>
+</head>
+<body>
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div>
+                    <div class="layui-card-header">
+                        <button class="layui-btn" onclick="xadmin.open('添加影厅','./hall-add.html',480,295)"><i class="layui-icon"></i>添加</button>
+                    </div>
+                </div>
+                <div class="layui-card-body ">
+                    <table class="layui-table layui-form">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>名称</th>
+                                <th>行</th>
+                                <th>列</th>
+                                <th>可用座位数/总座位数</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+	
+	$.ajax({
+		url:"http://120.78.64.17:8080/TTMS_bs1.0/in/jingli/showhall",
+		type:"get",
+		async:true,
+		dataType:"json",
+		contentType: 'application/json',
+		xhrFields:{
+			withCredentials: true
+		},
+		success:function(data){
+			var html = "";
+			for(var i = 0; i < data.count; i++){
+				
+				var seatOn = 0;
+				var json = {
+					"hallId":parseInt(data.data[i].hallId)
+				}
+				$.ajax({
+					url:"http://120.78.64.17:8080/TTMS_bs1.0/in/jingli/loadjseat",
+					type:"POST",
+					data:JSON.stringify(json),
+					dataType:"json",
+					contentType: 'application/json',
+					xhrFields:{
+						withCredentials: true
+					},
+					async:false,
+					success: function(data){
+						count = data.rowCount * data.colCount;
+						for(var i = 0; i < count; i++){
+							if(data.seat[i].state == 1){
+								seatOn++;
+							}
+						}
+					},
+					error: function(){
+						console.log("error");
+					}
+				});
+				
+				
+				html+="<tr><td>" + data.data[i].hallId + "</td><td>" +  data.data[i].hallName + "</td><td>" + data.data[i].hallSeatRow + "</td><td>" + data.data[i].hallSeatCol + "</td><td><h class='textgreen'>" + seatOn + "</h><h class='textblack'>/" + data.data[i].hallSeatCount + "</h></td><td class='td-manage'><a title='编辑' onclick='xadmin.open(&quot编辑&quot,&quot./hall-edit.html?id=" + data.data[i].hallId + "&quot,720,720)' href='javascript:;'><i class='layui-icon'>&#xe642;</i></a><a title='删除' onclick='hall_del(this," + data.data[i].hallId + ")' href='javascript:;'><i class='layui-icon'>&#xe640;</i></a></td></tr>"
+			}
+			$('tbody:eq(0)').html(html);
+		},
+		error: function(){
+			console.log("请求服务器出错！！！");
+		}
+	});
+
+
+      /*用户-删除*/
+      function hall_del(obj,id){
+          layer.confirm('确认要删除吗？',function(index){
+              //发异步删除数据
+			  var json = {
+				  "hallName": id
+			  }
+			  $.ajax({
+				  url:"",
+				  type:"POST",
+				  data:JSON.stringify(json),
+				  dataType:"json",
+				  async:true,
+				  contentType: 'application/json',
+					xhrFields:{
+						withCredentials: true
+					},
+				  success: function(data){
+					  if(data.deleteState == true){
+						  layer.msg(data.msg,{icon:1,time:1000});
+						  $(obj).parents("tr").remove();
+					  }else{
+						  layer.msg(data.msg,{icon:2,time:1000});
+					  }
+				  },
+				  error: function(){
+					  layer.msg('服务器请求出错',{icon:1,time:1000});
+				  }
+			  });
+              
+              
+          });
+      }
+    </script>
+</html>

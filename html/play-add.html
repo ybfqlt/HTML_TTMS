@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html class="x-admin-sm">
+    
+    <head>
+        <meta charset="UTF-8">
+        <title>CoCo--安排放映计划</title>
+        <link rel="stylesheet" href="../css/font.css">
+        <link rel="stylesheet" href="../css/xadmin.css">
+        <script type="text/javascript" src="../lib/layui/layui.js" charset="utf-8"></script>
+        <script type="text/javascript" src="../js/xadmin.js"></script>
+		<script type="text/javascript" src="../js/jquery.min.js"></script>
+        <script type="text/javascript" src="../js/level.js"></script>
+    </head>
+    <body>
+        <div class="layui-fluid">
+            <div class="layui-row">
+                <form class="layui-form">
+                    <div class="layui-form-item">
+                        <label for="movieId" class="layui-form-label">
+                            <span class="x-red">*</span>电影名称</label>
+                        <div class="layui-input-inline">
+                            <select id="movieId">
+								<option value="defulat">请选择</option>
+							</select>
+						</div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label for="hallId" class="layui-form-label">
+                            <span class="x-red">*</span>影厅</label>
+                        <div class="layui-input-inline">
+                            <select id="hallId">
+								<option value="defulat">请选择</option>
+							</select>
+						</div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label for="playDate" class="layui-form-label">
+                            <span class="x-red">*</span>放映时间</label>
+                        <div class="layui-input-inline">
+                            <input type="datetime-local" id="playDate" name="playDate" required="" lay-verify="playDate" autocomplete="off" class="layui-input"></div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label for="price" class="layui-form-label">
+                            <span class="x-red">*</span>价格</label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="price" name="price" required="" lay-verify="price" autocomplete="off" class="layui-input" oninput="value=value.replace(/[^\d]/g,'')"></div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label for="add" class="layui-form-label"></label>
+                        <button class="layui-btn" lay-filter="add" lay-submit="">增加</button></div>
+                </form>
+            </div>
+        </div>
+        <script>
+				$.ajax({
+					url:"http://120.78.64.17:8080/TTMS_bs1.0/in/jingli/selectmovie",
+					type:"get",
+					dataType:"json",
+					async:false,
+					contentType: 'application/json',
+					xhrFields:{
+						withCredentials: true
+					},
+					success:function(data){
+						if(data.state == true){
+							var html = "<option value='defulat'>请选择</option>";
+							for(var i = 0; i < data.count; i++){
+								html+="<option value='" + data.data[i].movieId + "'>" + data.data[i].movieTitle + "</option>";
+							}
+							$("#movieId").html(html);
+						}
+
+					},
+					error: function(){
+						console.log("error");
+					}
+				});
+			
+			$.ajax({
+					url:"http://120.78.64.17:8080/TTMS_bs1.0/in/jingli/showhall",
+					type:"get",
+					dataType:"json",
+					async:false,
+					contentType: 'application/json',
+					xhrFields:{
+						withCredentials: true
+					},
+					success:function(data){
+						if(data.count != 0){
+							var html = "<option value='defulat'>请选择</option>";
+							for(var i = 0; i < data.count; i++){
+								html+="<option value='" + data.data[i].hallId + "'>" + data.data[i].hallName + "</option>";
+							}
+							$("#hallId").html(html);
+						}
+
+					},
+					error: function(){
+						console.log("error");
+					}
+				});
+			
+			layui.use(['form', 'layer','jquery'],
+            function() {
+                $ = layui.jquery;
+                var form = layui.form;
+                layer = layui.layer;
+				
+                //监听提交
+                form.on('submit(add)',
+                function(data) {
+					var datas = data.field;
+					if(document.getElementById("movieId").options[document.getElementById("movieId").selectedIndex].value === "defulat"){
+						layer.msg('电影未选择',{icon:2,time:1000});
+					}else if(document.getElementById("hallId").options[document.getElementById("hallId").selectedIndex].value === "defulat"){
+						layer.msg('影厅未选择',{icon:2,time:1000});
+					}else if(datas.playDate === ""){
+						layer.msg('请输入正确的时间',{icon:2,time:1000});
+					}else if(datas.price === "" || parseInt(datas.price) === 0){
+						layer.msg('价格未输入',{icon:2,time:1000});
+					}else{
+						layer.alert("确认增加", {
+							icon: 3
+						},
+						function() {
+							var time = datas.playDate.replace("T"," ");
+							time+=":00";
+							var json = {
+								"movieId":parseInt(document.getElementById("movieId").options[document.getElementById("movieId").selectedIndex].value),
+								"hallId":parseInt(document.getElementById("hallId").options[document.getElementById("hallId").selectedIndex].value),
+								"scheduleStartTime":time,
+								"scheduleTicketPrice":parseFloat(datas.price + ".9")
+							};
+							console.log(JSON.stringify(json));
+							$.ajax({
+								url:"http://120.78.64.17:8080/TTMS_bs1.0/in/jingli/addschedule",
+								type:"POST",
+								data: JSON.stringify(json),
+								dataType:"json",
+								async:false,
+								contentType: 'application/json',
+								xhrFields:{
+									withCredentials: true
+								},
+								success: function(data){
+									if(data.addState == true){
+										layer.alert(data.msg,{
+											icon:6
+										})
+									}else{
+										layer.alert(data.msg,{
+											icon:5
+										})
+									}
+								},
+								error: function(){
+									layer.alert("请求服务器出错，请稍后再试",{
+										icon:5
+									})
+								}
+
+							});
+							//关闭当前frame
+							xadmin.close();
+							// 可以对父窗口进行刷新 
+							xadmin.father_reload();
+						});
+					}
+                    return false;
+                });
+            });
+		</script>
+    </body>
+</html>

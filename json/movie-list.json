@@ -1,0 +1,27 @@
+{
+	"count": 3,
+	"result":[
+		{
+			"id":"1",
+			"title":"1",
+			"runtime":120,
+			"country":"1",
+			"genres":"1",
+			"rating":"1"
+		},{
+			"id":"2",
+			"title":"2",
+			"runtime":120,
+			"country":"2",
+			"genres":"2",
+			"rating":"2"
+		},{
+			"id":"3",
+			"title":"3",
+			"runtime":120,
+			"country":"3",
+			"genres":"3",
+			"rating":"3"
+		}
+	]
+}

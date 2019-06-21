@@ -1,0 +1,27 @@
+[
+	{
+		"beginTime":"11:30",
+		"endTime":"12:30",
+		"hall":"1",
+		"sellPrice":13,
+		"sessionId":"123"
+	},{
+		"beginTime":"11:30",
+		"endTime":"12:30",
+		"hall":"1",
+		"sellPrice":13,
+		"sessionId":"123"
+	},{
+		"beginTime":"11:30",
+		"endTime":"12:30",
+		"hall":"1",
+		"sellPrice":13,
+		"sessionId":"123"
+	},{
+		"beginTime":"11:30",
+		"endTime":"12:30",
+		"hall":"1",
+		"sellPrice":13,
+		"sessionId":"123"
+	}
+]

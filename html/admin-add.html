@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html class="x-admin-sm">
+    
+    <head>
+        <meta charset="UTF-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>CoCo--用户添加</title>
+        <link rel="stylesheet" href="../css/font.css">
+        <link rel="stylesheet" href="../css/xadmin.css">
+        <script type="text/javascript" src="../lib/layui/layui.js" charset="utf-8"></script>
+        <script type="text/javascript" src="../js/xadmin.js"></script>
+        <script type="text/javascript" src="../js/jquery.min.js"></script>
+        <script type="text/javascript" src="../js/md5.js"></script>
+        <script type="text/javascript" src="../js/level.js"></script>
+        <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+        <!--[if lt IE 9]>
+            <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+            <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+    </head>
+    <body>
+        <div class="layui-fluid">
+            <div class="layui-row">
+                <form class="layui-form">
+                  <div class="layui-form-item">
+                      <label for="username" class="layui-form-label">
+                          <span class="x-red">*</span>用户名
+                      </label>
+                      <div class="layui-input-inline">
+                          <input type="text" id="username" name="username" required="" lay-verify="username"
+                          autocomplete="off" class="layui-input">
+                      </div>
+                      <div class="layui-form-mid layui-word-aux">
+                          <span class="x-red">*</span>将会成为您唯一的登入名
+                      </div>
+                  </div>
+                  <div class="layui-form-item">
+                      <label class="layui-form-label"><span class="x-red">*</span>角色</label>
+                      <div class="layui-input-block">
+                        <input type="checkbox" name="like1[write]" lay-skin="primary" title="经理" checked="">
+                      </div>
+                  </div>
+                  <div class="layui-form-item">
+                      <label for="pass" class="layui-form-label">
+                          <span class="x-red">*</span>密码
+                      </label>
+                      <div class="layui-input-inline">
+                          <input type="text" id="pass" name="pass" required="" lay-verify="pass"
+                          autocomplete="off" class="layui-input">
+                      </div>
+                      <div class="layui-form-mid layui-word-aux">
+                          <span class="x-red">*</span>8到16个字符
+                      </div>
+                  </div>
+                  <div class="layui-form-item">
+                      <label for="L_repass" class="layui-form-label">
+                      </label>
+                      <button  class="layui-btn" lay-filter="add" lay-submit="">
+                          增加
+                      </button>
+                  </div>
+              </form>
+            </div>
+        </div>
+        <script>
+		layui.use(['form', 'layer'],
+            function() {
+                $ = layui.jquery;
+                var form = layui.form,
+                layer = layui.layer;
+
+                //自定义验证规则
+                form.verify({
+                    username:[/(.+){6,15}$/, '用户名必须6到15位'],
+                    pass: [/(.+){8,16}$/, '密码必须8到16位']
+                });
+
+                //监听提交
+                form.on('submit(add)',
+                function(data) {
+					var json = {
+						"userName": data.field.username,
+						"userPassword": hex_md5(data.field.pass)
+					};
+                    $.ajax({
+						url:"http://120.78.64.17:8080/TTMS_bs1.0/in/manager/adduser",
+						type:"POST",
+						data: JSON.stringify(json),
+						dataType:"json",
+						async: true,
+						contentType: 'application/json',
+						xhrFields:{
+							withCredentials: true
+						},
+						success: function(datas){
+							if(datas.addState == true){
+								layer.alert(datas.msg, {
+									icon: 6
+								},function(){
+									xadmin.close();
+									xadmin.father_reload();
+								});
+							}else{
+								layer.alert(datas.msg, {
+									icon: 5
+								});
+							}
+						},
+						error: function(){
+							alert("error");
+						}
+					});
+                    
+                    return false;
+                });
+
+            });
+		</script>
+    </body>
+
+</html>

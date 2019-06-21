@@ -1,0 +1,73 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>CoCo-电影详情</title>
+<!--CSS-->
+<link rel="stylesheet" href="../css/common.css"/>
+<link rel="stylesheet" href="../css/home-index.css"/>
+<link rel="stylesheet" href="../css/cinemas-cinema.css"/>
+<link href="../css/aboutPageStyle.css" rel="stylesheet" type="text/css">
+<!--JS-->
+<script src="../js/jquery.min.js" type="text/javascript"></script>
+</head>
+
+<body>
+<div id="mainHeader">
+    <div id="logo"> CoCo </div>
+    <div id="headerLinks"><a href="./Login.html" title="登录">未登录</a></div>
+</div>
+<div class="newBody">
+    <div id="details"></div>
+    <button id="chooseSeat" type="submit" class="btn btn-block btn-red waves-attach waves-light">开始购票</button>
+    <section id="sessionList" style="display: none">
+        <h1>放映场次</h1>
+        <hr>
+        <div class="show-list active">
+            <div class="plist-container active">
+                <table class="plist">
+                    <thead>
+                        <tr>
+                            <th>放映时间</th>
+                            <th>放映厅</th>
+                            <th>售价（元）</th>
+                            <th>选座购票</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+	<footer data-am-widget="footer" class="am-footer am-footer-default" data-am-footer="{  }">
+			<div class="am-footer-miscs ">
+				<p>由CoCo团队提供技术支持</p>
+				<p>CopyRight©2019 CoCO Inc.</p>
+			</div>
+		</footer>
+</div>
+<!--JS--> 
+<script src="../js/films.js"></script> 
+<script type="text/javascript" src="../js/canvas-nest.js"></script> 
+<script type="text/javascript" src="../js/mouseClick.js"></script>
+</body>
+<script>
+	$.ajax({
+		url:"http://120.78.64.17:8080/TTMS_bs1.0/up/loginuserlog",
+		type:"get",
+		dataType:"json",
+		async: true,
+        contentType: 'application/json',
+		xhrFields:{
+			withCredentials: true
+		},
+		success: function(data){
+			if(data.userState == true){
+				var html = "<a href='./userCenter.html' title='个人中心'>" + data.userName + "</a>";
+				$("#headerLinks").html(html)
+			}
+		}
+	});
+	</script>
+</html>

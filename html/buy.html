@@ -1,0 +1,191 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>CoCo--选座购票</title>
+	
+	<link rel="stylesheet" href="../css/userSeat.css">
+	<script type="text/javascript" src="../lib/layui/layui.all.js"></script>
+	<script type="text/javascript" src="../js/xadmin.js"></script>
+</head>
+
+<body>
+	
+	    <div>
+        <div id="Pingmu">
+            <p>屏幕</p>
+        </div>
+        <div id="Zuowei">
+        </div>
+    </div>
+    <div class="div3">
+            <div class="img1" id="poster"></div>
+            <div class="img2">
+                <h3 id="title">大侦探皮卡丘</h3>
+                <p id="type">类型：<br>时长：</p>
+            </div>
+        <div class="div6">
+            <div id="hall">影厅：</div>
+            <div id="time">场次：</div>
+            <div id="number">票数：</div>
+            <div id="money">总价:</div>
+			<div id="seat_selected">座位：</div>
+        </div>
+        <div class="div5">
+                <div class="div2" style="float: left;"></div>
+                <div class="div4">可选座</div>
+                <div class="div1" style="float: left;"></div>
+                <div class="div4">已售出</div>
+			<div id="tset"><button class="login-button" id="enterBuy">确认购票</button></div>
+        </div>
+
+    </div>
+</body>
+	
+	<script type="text/javascript" src="../js/jquery.min.js"></script>
+	
+	<script>
+		var newmoviePlotSimple = "";
+//获取到当前的Url地址
+	var loc = location.href;
+	//地址的总长度
+	var n1 = loc.length;
+	//取得?号的位置
+	var n2 = loc.indexOf("?");
+	//获取到url所传递的所有的参数字符
+	var data = decodeURI(loc.substr(n2 + 1, n1 - n2));
+	//获取到第一个=号的位置
+	var n3 = data.indexOf("=");
+
+	var scheduleId = decodeURI(data.substr(n3 + 1, n1 - n3 - 1));
+		var json = {
+			"scheduleId":parseInt(scheduleId)
+		}
+		$.ajax({
+		url:"http://120.78.64.17:8080/TTMS_bs1.0/in/loadseat",
+		type:"POST",
+		data:JSON.stringify(json),
+		dataType:"json",
+		async:true,
+		contentType: 'application/json',
+		xhrFields:{
+			withCredentials: true
+		},
+		success: function(data){
+			var html="";
+			var k = 0;
+			document.getElementById("Zuowei").style.width = ((data.colCount+1)*50) + 'px';
+			document.getElementById("Pingmu").style.width = (data.colCount*50) + 'px';
+			for(var i = 0; i < data.rowCount; i++){
+				html+="<div class='seat'>" + (i+1) + "</div>"
+				for(var j = 0; j < data.colCount; j++){
+					html+="<div id='" + (k+1) + "' class='div" + data.seat[k].state + "' seat='" + (i+1) + "排" + (j+1) + "列'\>" + (j+1) + "</div>";
+					k++;
+				}
+			}
+			document.getElementById("Zuowei").innerHTML = html;
+			document.getElementById("title").innerHTML = data.movieTitle;
+			var img = "<img src='" + data.moviePoster + "' height='160px' width='120px'>";
+			document.getElementById("poster").innerHTML = img;
+			var type = "类型：" + data.movieType + "<br>时长：" + data.movieRuntime + "分钟";
+			document.getElementById("type").innerHTML = type;
+			document.getElementById("hall").innerHTML += data.hallName + "厅";
+			document.getElementById("time").innerHTML += toDate(data.hallstarttime);
+		},
+		error: function(){
+			console.log("error");
+		}
+	});		
+		
+		function toDate(number){
+		var date = new Date(number);
+		var Y = date.getFullYear() + '-';
+		var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+		var D = date.getDate() < 10 ? '0' + date.getDate() : date.getDate();
+		var h = date.getHours() + ':';
+		if(h.length === 2){
+			h ="0" + h;
+		}	
+		var m = date.getMinutes();
+		if(m === 0){
+			m ="00";
+		}
+		return (Y + M + D + " " + h + m);
+	}
+		
+window.onload = function(){
+    var Div1 = document.getElementById('Zuowei');
+    var Div2 = document.createElement('div');
+    var Div3 = document.getElementById('div3');
+    var Div4 = document.querySelectorAll(".div3 div");
+    var j=0;
+    Div1.onclick = function(e){
+        var event = e || window.event;
+        var target = event.target || event.srcElement;
+        if(target.className.toLowerCase() === 'div2') {
+            if (j <= 4) {
+                if (target.style.backgroundColor === 'orange') {
+                    target.style.backgroundColor = '#00B80F';
+                    var reg = new RegExp(target.getAttribute('seat'));
+                    Div2.innerText = Div2.innerText.replace(reg, '');
+                } else {
+                    target.style.backgroundColor = 'orange';
+                    Div2.innerText += target.getAttribute('seat');
+                    document.getElementById('seat_selected').appendChild(Div2);
+                }
+            }
+            else if(target.style.backgroundColor === 'orange' && j===5) {
+                    target.style.backgroundColor = '#00B80F';
+                    var reg = new RegExp(target.getAttribute('seat'));
+                    Div2.innerText = Div2.innerText.replace(reg, '');
+
+            }
+            else if(j===5)
+                alert("单个用户最多只能购买5张票");
+            for (var i = j = 0; i < Div2.innerText.length; i++)
+                if (Div2.innerText[i] == '排')
+                    j++;
+            document.getElementById('number').innerText = "票数：" + j;
+			var price = 33;
+			document.getElementById('money').innerText = "总价：" +  j*price + " 元";
+        }
+    }
+}
+		
+	$("#enterBuy").click(function(){
+		enterBuy();
+	});
+		
+		function enterBuy(){
+			var data = document.getElementById("seat_selected").innerHTML;
+			var datas = data.substr(8,data.length-14);
+			var json = {
+				"scheduleId":parseInt(scheduleId),
+				"data":datas
+			}
+			$.ajax({
+				url:"http://120.78.64.17:8080/TTMS_bs1.0/in/pay/saveorder",
+				type:"POST",
+				data:JSON.stringify(json),
+				dataType:"json",
+				async:true,
+				contentType: 'application/json',
+				xhrFields:{
+					withCredentials: true
+				},
+				success: function(data){
+					if(data.payState == true){
+						var url="./toPay.html?id=" + data.id + "s" + data.scheduleId;
+						xadmin.open('支付',url,330,600);
+					}
+				},
+				error: function(){
+					console.log("error");
+				}
+				
+			})
+//			console.log(json);
+		}
+	</script>
+</html>

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="UTF-8">
+<meta content="IE=edge" http-equiv="X-UA-Compatible">
+<meta content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no, width=device-width" name="viewport">
+<title>CoCo--登陆</title>
+<!-- css -->
+<link href="../css/base.min.css" rel="stylesheet">
+<link href="../css/project.min.css" rel="stylesheet">
+<link href="../css/auth.css" rel="stylesheet">
+<link href="../css/Material_Icons.css" rel="stylesheet">
+</head>
+<body class="page-brand">
+<div class="authpage">
+  <div class="container">
+    <form action="javascript:void(0);" method="POST">
+      <div class="auth-main auth-row auth-col-one">
+        <div class="auth-top auth-row"> <a class="boardtop-left" href="../index.html">
+          <div>首 页</div>
+          </a>
+          <div class="auth-logo"> <img src="../images/ic_login.jpg" alt=""> </div>
+          <a href="../html/register.html" class="boardtop-right">
+          <div>注 册</div>
+          </a> </div>
+        <div class="auth-row">
+          <div class="form-group-label auth-row row-login">
+            <label class="floating-label" for="name">用户名</label>
+            <input class="form-control maxwidth-auth" id="name" type="text" name="Name">
+          </div>
+        </div>
+        <div class="auth-row">
+          <div class="form-group-label auth-row row-login">
+            <label class="floating-label" for="passwd">密码</label>
+            <input class="form-control maxwidth-auth" id="passwd" type="password" name="Password">
+          </div>
+        </div>
+        <div class="btn-auth auth-row">
+          <button id="login" type="submit" class="btn btn-block btn-brand waves-attach waves-light">确认登录</button>
+        </div>
+        <div class="auth-help auth-row"> <a href="../html/forgetPassword.html">忘记密码？</a> </div>
+      </div>
+    </form>
+  </div>
+</div>
+<div aria-hidden="true" class="modal modal-va-middle fade" id="result" role="dialog" tabindex="-1">
+  <div class="modal-dialog modal-xs">
+    <div class="modal-content">
+      <div class="modal-inner">
+        <p class="h5 margin-top-sm text-black-hint" id="msg"></p>
+      </div>
+      <div class="modal-footer">
+        <p class="text-right">
+          <button class="btn btn-flat btn-brand-accent waves-attach" data-dismiss="modal" type="button" id="result_ok">知道了</button>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+<footer class="ui-footer">
+  <div class="container">
+    <marquee>
+    &copy;2019 CoCo
+    </marquee>
+  </div>
+</footer>
+<canvas id="c_n1"></canvas>
+<!-- js --> 
+<script src="../js/jquery.min.js" type="text/javascript"></script> 
+<script src="../js/gt.js" type="text/javascript"></script> 
+<script src="../js/base.min.js" type="text/javascript"></script> 
+<script src="../js/project.min.js" type="text/javascript"></script> 
+<script src="../js/canvas-nest.js" type="text/javascript"></script>
+<script src="../js/md5.js" type="text/javascript"></script>
+<script src="../js/qrcode.min.js" type="text/javascript"></script>
+</body>
+</html>
+<script>
+    $(document).ready(function () {
+        function login() {
+            
+            document.getElementById("login").disabled = true;
+			
+			var name = document.getElementById("name").value;
+			var passwd = document.getElementById("passwd").value;
+			
+			if(name.length == 0){
+				$("#result").modal();
+                $("#msg").html("！！！请输入用户名！！！");
+			}else if(name.length < 6 || name.length > 15){
+				$("#result").modal();
+                $("#msg").html("！！！用户名长度出错，请检查并重新输入！！！");
+			}else{
+				if(passwd.length == 0){
+					$("#result").modal();
+                	$("#msg").html("！！！请输入密码！！！");
+				}else if(passwd.length < 8 || passwd.length > 16){
+					$("#result").modal();
+                	$("#msg").html("！！！密码长度出错，请检查并重新输入！！！");
+				}else{
+					//将密码转换为MD5值
+					var hash = hex_md5(passwd);
+					var json = {
+							"name": name,
+							"password": hash 
+					};
+					$.ajax({
+						type: "POST",
+						url: "http://120.78.64.17:8080/TTMS_bs1.0/up/login",
+						async: true,
+						data: JSON.stringify(json),
+						dataType: "json",
+                        contentType: 'application/json',
+						xhrFields:{
+							withCredentials: true
+						},
+						success: function(data) {
+							//用户名密码都正确时loginInfo的值为true
+							if (data.loginInfo == true) {
+								$("#result").modal();
+								$("#msg").html("登陆成功");
+                                window.setTimeout(function(){
+                                    window.location = "../index.html"
+                                }, 1200);
+								//type为g时，用户类型为管理员
+								if(data.type == "g"){
+									window.setTimeout("location.href='./userCenter.html'", 1200);
+								}
+//								//type为j时，用户类型为经理
+								else if(data.type == "j"){
+									window.setTimeout("location.href='./userCenter.html'", 1200);
+								}
+//								//否则用户类型("u")为普通用户
+								else{
+									window.setTimeout("location.href='../index.html'", 1200);
+								}
+
+							}
+							//用户名存在，但对应密码校验错误时loginInfo的值为false
+							else if (data.loginInfo == false){
+								$("#result").modal();
+								$("#msg").html("密码错误");
+								document.getElementById("login").disabled = false;
+							}
+							//用户名不存在
+							else{
+								$("#result").modal();
+								$("#msg").html("用户名不存在");
+								document.getElementById("login").disabled = false;
+							}
+						},
+						error: function(){
+							alert("error");
+						}
+            		});
+				}
+			}
+			
+            document.getElementById("login").disabled = false;
+        }
+
+        $("#login").click(function () {
+            login();
+        });
+
+        $('div.modal').on('shown.bs.modal', function () {
+            $("div.gt_slider_knob").hide();
+        });
+
+        $('div.modal').on('hidden.bs.modal', function () {
+            $("div.gt_slider_knob").show();
+        });
+    })
+</script>

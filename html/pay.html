@@ -1,0 +1,125 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>CoCo--支付</title>
+<link rel="stylesheet" href="../css/buttons.css">
+	<script type="text/javascript" src="../js/jquery.min.js"></script>
+</head>
+
+<body>
+<span class="button-wrap">
+	<button class="button button-pill button-raised button-primary" id="enterPay" onClick="pay(this)">确认支付</button>
+	<button class="button button-pill button-raised" id="escPay" onClick="pay(this)">取消支付</button>
+</span>
+	<div style="text-align: center"><h1 id="time"></h1></div>
+	<footer data-am-widget="footer" class="am-footer am-footer-default" data-am-footer="{  }">
+			<div class="am-footer-miscs ">
+				<p>由CoCo团队提供技术支持</p>
+				<p>CopyRight©2019 CoCo Inc.</p>
+			</div>
+		</footer>
+</body>
+<script>
+	//获取到当前的Url地址
+	var loc = location.href;
+	//地址的总长度
+	var n1 = loc.length;
+	//取得?号的位置
+	var n2 = loc.indexOf("?");
+	//获取到url所传递的所有的参数字符
+	var data = decodeURI(loc.substr(n2 + 1, n1 - n2));
+	//获取到第一个=号的位置
+	var n3 = data.indexOf("=");
+
+	var datas = decodeURI(data.substr(n3 + 1, n1 - n3 - 1));
+	var n4 = datas.indexOf("s");
+	
+	var id = datas.substr(0,datas.length - (datas.length - n4));
+	var scheduleId = datas.substr(n4+1,datas.length - n4)
+	
+	 function pay(obj){
+		 var state = false;
+		 if(obj.id == "enterPay"){
+			 state = true;
+		 }
+		 var json = {
+			 "id":id,
+			 "state":state,
+			 "count": id.split('t').length-1,
+			 "scheduleId":parseInt(scheduleId)
+		 }
+		 $.ajax({
+			 url:"http://120.78.64.17:8080/TTMS_bs1.0/in/pay/paymoney",
+			 type:"POST",
+			 data:JSON.stringify(json),
+			 dataType:"json",
+			 async:false,
+			contentType: 'application/json',
+			xhrFields:{
+				withCredentials: true
+			},
+			 success:function(data){
+				 if(data.state == true){
+					 alert("支付成功");
+				 }else{
+					 alert("支付失败");
+				 }
+					 document.getElementById("enterPay").onclick = outTime;
+		 			document.getElementById("escPay").onclick = outTime;
+				 document.getElementById("time").innerHTML = "当前链接已经过期";
+				 
+			 },
+			 error: function(){
+				 console.log("error_pay");
+			 }
+			 
+		 })
+	 }
+	
+	function outTime(){
+		alert("当前链接已经过期");
+	}
+	
+	//重新发送验证码间隔时长
+    var time = 122;
+	countDown();
+        //重新发送验证码倒计时
+        function countDown(){
+            if(time == 0){
+				var json = {
+					 "id":id,
+					 "state":false,
+					 "count": id.split('t').length-1,
+					 "scheduleId":parseInt(scheduleId)
+				 }
+				 $.ajax({
+					 url:"http://120.78.64.17:8080/TTMS_bs1.0/in/pay/paymoney",
+					 type:"POST",
+					 data:JSON.stringify(json),
+					 dataType:"json",
+					 async:true,
+					contentType: 'application/json',
+					xhrFields:{
+						withCredentials: true
+					},
+					 success:function(data){
+					 },
+					 error: function(){
+					 }
+			 
+		 	})
+				document.getElementById("time").innerHTML = "当前链接已经过期";
+				document.getElementById("enterPay").onclick = outTime;
+		 		document.getElementById("escPay").onclick = outTime;
+                return;
+            }else{
+                document.getElementById("time").innerHTML = "还剩" + time +"秒";
+                time--;
+            }
+            setTimeout(function(){
+                countDown();
+            },1000);
+        }
+</script>
+</html>

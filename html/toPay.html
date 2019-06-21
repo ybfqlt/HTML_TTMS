@@ -1,0 +1,58 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>CoCo--支付跳转</title>
+	<script type="text/javascript" src="../lib/layui/layui.all.js"></script>
+	<script type="text/javascript" src="../js/xadmin.js"></script>
+	<script type="text/javascript" src="../js/jquery.min.js"></script>
+        <link rel="stylesheet" href="../css/buttons.css"/>
+</head>
+
+<body>
+<img id="pay" src="http://qr.topscan.com/api.php?text=http://120.78.64.17:8080/HTML_Finish/html/pay.html" alt="pay">
+	
+	<div><h1 id="time"></h1></div>
+
+</body>
+<script language="javascript">
+	
+	//获取到当前的Url地址
+	var loc = location.href;
+	//地址的总长度
+	var n1 = loc.length;
+	//取得?号的位置
+	var n2 = loc.indexOf("?");
+	//获取到url所传递的所有的参数字符
+	var data = decodeURI(loc.substr(n2 + 1, n1 - n2));
+	//获取到第一个=号的位置
+	var n3 = data.indexOf("=");
+
+	var id = decodeURI(data.substr(n3 + 1, n1 - n3 - 1));
+	console.log(id);
+	
+	document.getElementById("pay").src="http://qr.topscan.com/api.php?text=http://120.78.64.17:8080/HTML_Finish/html/pay.html?id=" + id;
+	
+	layer.msg('请在2分钟内扫码完成支付',{icon:7,time:2000});
+	//重新发送验证码间隔时长
+    var time = 122;
+	countDown();
+        //重新发送验证码倒计时
+        function countDown(){
+            if(time == 0){
+				xadmin.close();
+                return;
+            }else{
+                document.getElementById("time").innerHTML = "还剩" + time +"秒";
+                time--;
+            }
+            setTimeout(function(){
+                countDown();
+            },1000);
+        }
+	
+	
+		
+</script>
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html class="x-admin-sm">
+    <head>
+        <meta charset="UTF-8">
+        <title>CoCo--用户搜索</title>
+        <link rel="stylesheet" href="../css/font.css">
+        <link rel="stylesheet" href="../css/xadmin.css">
+        <script src="../lib/layui/layui.js" charset="utf-8"></script>
+        <script type="text/javascript" src="../js/xadmin.js"></script>
+        <script type="text/javascript" src="../js/jquery.min.js"></script>
+        <script type="text/javascript" src="../js/level.js"></script>
+    </head>
+    <body>
+        <div class="layui-fluid sreach">
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-md12">
+                    <div class="layui-card">
+                        <div class="layui-card-body ">
+                                <div class="layui-inline layui-show-xs-block">
+                                    <input type="text" placeholder="请输入用户名" class="layui-input" id="name">
+                                </div>
+                        </div>
+                        <div class="layui-card-body ">
+                            <table class="layui-table layui-form">
+                              <thead>
+                                <tr>
+                                  <th>ID</th>
+                                  <th>用户名</th>
+                                  <th>密码</th>
+                                  <th>角色</th>
+                                  <th>注册时间</th>
+                                  <th>操作</th>
+								  </tr>
+                              </thead>
+                              <tbody>
+								  <td>无数据</td>
+								  <td>无数据</td>
+								  <td>无数据</td>
+								  <td>无数据</td>
+								  <td>无数据</td>
+								  <td>无数据</td>
+								</tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> 
+    </body>
+    <script>
+		$("#name").bind("input propertychange",function(event){
+			var name = $("#name").val();
+			if(name.length == 0){
+				$('tbody:eq(0)').html("<td>无数据</td><td>无数据</td><td>无数据</td><td>无数据</td><td>无数据</td><td>无数据</td>");
+			}else{
+				var json = {
+					"userName": name
+				}
+				$.ajax({
+					url:"http://120.78.64.17:8080/TTMS_bs1.0/in/manager/selecthuuser",
+					type:"POST",
+					data:JSON.stringify(json),
+					dataType:"json",
+					async: true,
+					contentType: 'application/json',
+					xhrFields:{
+						withCredentials: true
+					},
+					success: function(data){
+						var html = "";
+						for(var i = 0; i < data.count; i++){
+							if(data.data[i].userType != "j"){
+								continue;
+							}
+							html+="<tr><td>" + data.data[i].userId + "</td><td>" + data.data[i].userName + "</td><td>" + data.data[i].userPassword + "</td><td>经理</td><td>"  + data.data[i].userRegistertime + "</td><td class='td-manage'><a title='编辑' onclick='xadmin.open(&quot编辑&quot,&quot./admin-edit.html?name=" + data.data[i].userName + "&quot,640,480)' href='javascript:;'><i class='layui-icon'>&#xe642;</i></a><a title='删除' onclick='admin_del(this," + data.data[i].userId + ")' href='javascript:;'><i class='layui-icon'>&#xe640;</i></a></td></tr>"
+						}
+						$('tbody:eq(0)').html(html);
+					},
+					error:function(){
+						$('tbody:eq(0)').html("<td>无数据</td><td>无数据</td><td>无数据</td><td>无数据</td><td>无数据</td><td>无数据</td>");
+					}
+				});
+			}
+		});
+    </script>
+</html>
