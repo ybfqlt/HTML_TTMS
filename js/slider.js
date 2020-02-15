@@ -73,7 +73,7 @@
                 leftNum = this.curDisplay - i - 1;
                 if (k == 0) {
                     this.$aImg.eq(leftNum).css({
-                        transform: 'translateX(' + (-535 * (i + 1)) + 'px) translateZ(-120px)',
+                        transform: 'translateX(' + (-395 * (i + 1)) + 'px) translateZ(-120px)',
                         width:"auto",
                     }).animate({
                         height: _slideHeight + 'px',
@@ -85,7 +85,7 @@
                     rightNum = this.curDisplay + i + 1;
                     if (rightNum > this.imgLen - 1) rightNum -= this.imgLen;
                     this.$aImg.eq(rightNum).css({
-                        transform: 'translateX(' + (600 * (i + 1)) + 'px) translateZ(-120px) ',
+                        transform: 'translateX(' + (600* (i + 1)) + 'px) translateZ(-120px) ',
                         width:"auto"
                     }).animate({
                         height: _slideHeight + 'px',
@@ -98,6 +98,7 @@
                     this.$aImg.eq(leftNum).css({
                         transform: 'translateX(0px) translateZ(-1000px) ',
                         zIndex:-1
+
                     });
 
                     rightNum = this.curDisplay + i + 1;
@@ -119,6 +120,7 @@
                 height: _height + 'px',
                 marginTop: -_height / 2 + 'px',
                 opacity: '1',
+                width:"400px"
             }, 500).addClass('on').attr('onclick', _href);
             this.$aNav.eq(this.curDisplay).addClass('on');
 

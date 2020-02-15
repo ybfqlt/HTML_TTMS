@@ -5,14 +5,14 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>CoCo--支付跳转</title>
 	<script type="text/javascript" src="../lib/layui/layui.all.js"></script>
-	<script type="text/javascript" src="../js/judge.js"></script>
 	<script type="text/javascript" src="../js/xadmin.js"></script>
+	<script type="text/javascript" src="../js/judge.js"></script>
 	<script type="text/javascript" src="../js/jquery.min.js"></script>
         <link rel="stylesheet" href="../css/buttons.css"/>
 </head>
 
 <body>
-<img id="pay" src="http://qr.topscan.com/api.php?text=http://120.78.64.17:8080/HTML_Finish/html/pay.html" alt="pay">
+<img id="pay" src="http://qr.topscan.com/api.php?text=http://120.78.64.17:8080/HTML_TTMS/html/pay.html" alt="pay">
 	
 	<div><h1 id="time"></h1></div>
 
@@ -33,7 +33,7 @@
 	var id = decodeURI(data.substr(n3 + 1, n1 - n3 - 1));
 	console.log(id);
 	
-	document.getElementById("pay").src="http://qr.topscan.com/api.php?text=http://120.78.64.17:8080/HTML_Finish/html/pay.html?id=" + id;
+	document.getElementById("pay").src="http://qr.topscan.com/api.php?text=http://120.78.64.17:8080/HTML_TTMS/html/pay.html?id=" + id;
 	
 	layer.msg('请在2分钟内扫码完成支付',{icon:7,time:2000});
 	//重新发送验证码间隔时长

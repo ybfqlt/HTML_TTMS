@@ -280,9 +280,11 @@
 }
 .list-pager {
     list-style: none;
-    a {
-        font-size:14px
-    }
+    font-size:14px
+
+}
+a{
+    font-size:14px
 }
 .list-pager li {
     display: inline-block;
@@ -410,10 +412,14 @@
 }
 .movies-list {
     overflow: auto;
-    margin-top: 80px;
-	margin-left: 15%;
-	margin-right: 8%;
+    margin-top: 40px;
+
 }
 .movies-pager {
     text-align: center
+}
+#headerLinks a {
+    font-size: 20px;
+    margin-top: 5px;
+    display: inline-block;
 }

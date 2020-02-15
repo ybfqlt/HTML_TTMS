@@ -7,8 +7,8 @@
 	
 	<link rel="stylesheet" href="../css/userSeat.css">
 	<script type="text/javascript" src="../lib/layui/layui.all.js"></script>
-	<script type="text/javascript" src="../js/xadmin.js"></script>
     <script type="text/javascript" src="../js/judge.js"></script>
+	<script type="text/javascript" src="../js/xadmin.js"></script>
 </head>
 
 <body>
@@ -161,6 +161,7 @@ window.onload = function(){
 		function enterBuy(){
 			var data = document.getElementById("seat_selected").innerHTML;
 			var datas = data.substr(8,data.length-14);
+			datas = datas.substring(0,datas.length-1);
 			var json = {
 				"scheduleId":parseInt(scheduleId),
 				"data":datas
@@ -182,7 +183,7 @@ window.onload = function(){
 					}
 				},
 				error: function(){
-					console.log("请检查是否登录");
+					console.log("error");
 				}
 				
 			})

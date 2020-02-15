@@ -7,10 +7,10 @@
         <link rel="stylesheet" href="../css/font.css">
         <link rel="stylesheet" href="../css/xadmin.css">
         <script type="text/javascript" src="../lib/layui/layui.js" charset="utf-8"></script>
+        <script type="text/javascript" src="../js/judge.js"></script>
         <script type="text/javascript" src="../js/xadmin.js"></script>
 		<script type="text/javascript" src="../js/md5.js"></script>
         <script type="text/javascript" src="../js/level.js"></script>
-        <script type="text/javascript" src="../js/judge.js"></script>
 		<script>
 			//获取到当前的Url地址
 	var loc = location.href;
@@ -97,7 +97,7 @@
                             }
                         },
                         error: function(){
-                            layer.alert("请检查是否登录，请稍后再试",{icon: 5})
+                            layer.alert("服务器请求出错，请稍后再试",{icon: 5})
                         }
                     });
                     return false;
